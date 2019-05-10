@@ -3,6 +3,7 @@ from flask import render_template, flash, url_for, redirect
 from flask_bcrypt import generate_password_hash, check_password_hash
 
 import os
+import re
 
 from data import User
 
@@ -21,7 +22,12 @@ def register():
         e_mail = request.form['email']
         name = request.form['username']
         passwrd = generate_password_hash(request.form['password'])
-        
+        if bool(re.search(r'@', e_mail)) is False:
+            flash("Email must have an @ symbol")
+            return render_template('register.html')
+        if len(passwrd) > 12 or len(passwrd) < 6:
+            flash("Password length must be between 12 and 6 chars")
+            return render_template('register.html')
         User.create(username=name, password=passwrd, email=e_mail)
         flash("New User added successfully!")
     return render_template('register.html')
@@ -42,7 +48,6 @@ def login():
         except User.DoesNotExist:
             flash("Invalid username or password")
     return render_template("login.html")
-
 
 
 if __name__ == '__main__':
