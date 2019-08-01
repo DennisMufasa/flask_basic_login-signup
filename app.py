@@ -25,7 +25,7 @@ def register():
         if bool(re.search(r'@', e_mail)) is False:
             flash("Email must have an @ symbol")
             return render_template('register.html')
-        if len(passwrd) > 12 or len(passwrd) < 6:
+        if len(request.form['password']) > 12 or len(request.form['password']) < 6:
             flash("Password length must be between 12 and 6 chars")
             return render_template('register.html')
         User.create(username=name, password=passwrd, email=e_mail)
